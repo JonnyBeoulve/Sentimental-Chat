@@ -81,6 +81,7 @@ class Chat extends Component {
         return (
             this.props.activeUser && <Fragment>
                 <div className="border-bottom border-gray w-100 d-flex align-items-center bg-white" style={{ height: 90 }}>
+                    <img src="https://i.pinimg.com/originals/56/f0/c7/56f0c7de57fdae6d0a9ddc43448b6dff.png" style={{ height: 60, marginLeft: 20 }}></img>
                     <h2 className="text-dark mb-0 mx-4 px-2">{this.props.activeUser}</h2>
                 </div>
                 <div className="px-4 pb-4 w-100 d-flex flex-row flex-wrap align-items-start align-content-start position-relative" style={{ height: 'calc(100% - 180px)', overflowY: 'scroll' }}>
@@ -94,15 +95,16 @@ class Chat extends Component {
                         const mood = chat.sentiment > 0 ? HAPPY_EMOJI : (chat.sentiment === 0 ? NEUTRAL_EMOJI : SAD_EMOJI);
                         return (
                             <Fragment key={index}>
-                            { (isFirst || !inSequence || hasDelay) && (
-                                <div className={`d-block w-100 font-weight-bold text-dark mt-4 pb-1 px-1 text-${position}`} style={{ fontSize: '0.9rem' }}>
-                                <span className="d-block" style={{ fontSize: '1.6rem' }}>
-                                    {String.fromCodePoint(...mood)}
-                                </span>
-                                <span>{chat.user || 'Anonymous'}</span>
-                                </div>
-                            ) }
-                            <ChatMessage message={chat.message} position={position} />
+                                { (isFirst || !inSequence || hasDelay) && (
+                                    <div className={`d-block w-100 font-weight-bold text-dark mt-4 pb-1 px-1 text-${position}`} style={{ fontSize: '0.9rem' }}>
+                                    <span className="d-block" style={{ fontSize: '1.6rem' }}>
+                                        {String.fromCodePoint(...mood)}
+                                    </span>
+                                    <span>{chat.user || 'Anonymous'}
+                                    </span>
+                                    </div>
+                                ) }
+                                <ChatMessage message={chat.message} position={position} />
                             </Fragment>
                         );
                     })}

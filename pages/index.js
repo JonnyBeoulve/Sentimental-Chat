@@ -49,22 +49,22 @@ class IndexPage extends Component {
         ========================================================================*/
         return (
             <Layout>
-                <main className="container-fluid position-absolute h-100 bg-dark">
+                <main className="container-fluid position-absolute h-100" style={{backgroundColor: '#2A275E'}}>
                     <div className="row position-absolute w-100 h-100">
                         <section className="col-md-8 d-flex flex-row flex-wrap align-items-center align-content-center px-5">
                             <div className="px-5 mx-5">
                                 <span className="d-block w-100 h1 text-light" style={{marginTop: -50}}>
-                                { user
-                                    ? ( <span>
-                                            <span style={{color: '#999'}}>Welcome to Sentimental Chat, </span> {user}
-                                        </span>)
-                                    : `Enter a username`
-                                }
+                                    { user
+                                        ? ( <span>
+                                                <span style={{color: '#fff'}}>Welcome to Sentimental Chat</span>
+                                            </span>)
+                                        : `Enter a username`
+                                    }
                                 </span>
                                 { !user && <input type="text" className="form-control mt-3 px-3 py-2" onKeyUp={this.handleKeyUp} autoComplete="off" style={nameInputStyles} /> }
                             </div>
                         </section>
-                        <section className="col-md-4 position-relative d-flex flex-wrap h-100 align-items-start align-content-between bg-white px-0">
+                        <section className="col-md-4 position-relative d-flex flex-wrap h-100 align-items-start align-content-between px-0" style={{backgroundColor: '#eee'}}>
                             { user && <Chat activeUser={user} /> }
                         </section>
                     </div>

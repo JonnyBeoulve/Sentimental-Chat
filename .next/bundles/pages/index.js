@@ -14,7 +14,7 @@ __NEXT_REGISTER_PAGE('/', function() {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_pusher_js__ = __webpack_require__("./node_modules/pusher-js/dist/web/pusher.js");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_pusher_js___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2_pusher_js__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__ChatMessage__ = __webpack_require__("./components/ChatMessage.js");
-var _jsxFileName = "C:\\Users\\Jonny\\Documents\\GitHub\\sentimental-chat\\components\\Chat.js";
+var _jsxFileName = "C:\\Users\\Jonny\\Documents\\GitHub\\Sentimental-Chat\\components\\Chat.js";
 
 function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
@@ -155,11 +155,21 @@ function (_Component) {
           fileName: _jsxFileName,
           lineNumber: 83
         }
-      }, __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement("h2", {
-        className: "text-dark mb-0 mx-4 px-2",
+      }, __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement("img", {
+        src: "https://i.pinimg.com/originals/56/f0/c7/56f0c7de57fdae6d0a9ddc43448b6dff.png",
+        style: {
+          height: 60,
+          marginLeft: 20
+        },
         __source: {
           fileName: _jsxFileName,
           lineNumber: 84
+        }
+      }), __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement("h2", {
+        className: "text-dark mb-0 mx-4 px-2",
+        __source: {
+          fileName: _jsxFileName,
+          lineNumber: 85
         }
       }, this.props.activeUser)), __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement("div", {
         className: "px-4 pb-4 w-100 d-flex flex-row flex-wrap align-items-start align-content-start position-relative",
@@ -169,7 +179,7 @@ function (_Component) {
         },
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 86
+          lineNumber: 87
         }
       }, this.state.chats.map(function (chat, index) {
         var previous = Math.max(0, index - 1);
@@ -183,7 +193,7 @@ function (_Component) {
           key: index,
           __source: {
             fileName: _jsxFileName,
-            lineNumber: 96
+            lineNumber: 97
           }
         }, (isFirst || !inSequence || hasDelay) && __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement("div", {
           className: "d-block w-100 font-weight-bold text-dark mt-4 pb-1 px-1 text-".concat(position),
@@ -192,7 +202,7 @@ function (_Component) {
           },
           __source: {
             fileName: _jsxFileName,
-            lineNumber: 98
+            lineNumber: 99
           }
         }, __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement("span", {
           className: "d-block",
@@ -201,19 +211,19 @@ function (_Component) {
           },
           __source: {
             fileName: _jsxFileName,
-            lineNumber: 99
+            lineNumber: 100
           }
         }, String.fromCodePoint.apply(String, mood)), __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement("span", {
           __source: {
             fileName: _jsxFileName,
-            lineNumber: 102
+            lineNumber: 103
           }
         }, chat.user || 'Anonymous')), __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_3__ChatMessage__["a" /* default */], {
           message: chat.message,
           position: position,
           __source: {
             fileName: _jsxFileName,
-            lineNumber: 105
+            lineNumber: 107
           }
         }));
       })), __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement("div", {
@@ -223,7 +233,7 @@ function (_Component) {
         },
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 110
+          lineNumber: 112
         }
       }, __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement("textarea", {
         className: "form-control px-3 py-2",
@@ -234,7 +244,7 @@ function (_Component) {
         },
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 111
+          lineNumber: 113
         }
       })));
     }
@@ -253,7 +263,7 @@ function (_Component) {
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_react__ = __webpack_require__("./node_modules/react/index.js");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_react___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_react__);
-var _jsxFileName = "C:\\Users\\Jonny\\Documents\\GitHub\\sentimental-chat\\components\\ChatMessage.js";
+var _jsxFileName = "C:\\Users\\Jonny\\Documents\\GitHub\\Sentimental-Chat\\components\\ChatMessage.js";
 
 function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
@@ -350,7 +360,7 @@ function (_Component) {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_react___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_react__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_next_head__ = __webpack_require__("./node_modules/next/head.js");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_next_head___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_next_head__);
-var _jsxFileName = "C:\\Users\\Jonny\\Documents\\GitHub\\sentimental-chat\\components\\Layout.js";
+var _jsxFileName = "C:\\Users\\Jonny\\Documents\\GitHub\\Sentimental-Chat\\components\\Layout.js";
 
 
 /*========================================================================
@@ -6236,7 +6246,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_react___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_react__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__components_Chat__ = __webpack_require__("./components/Chat.js");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__components_Layout__ = __webpack_require__("./components/Layout.js");
-var _jsxFileName = "C:\\Users\\Jonny\\Documents\\GitHub\\sentimental-chat\\pages\\index.js";
+var _jsxFileName = "C:\\Users\\Jonny\\Documents\\GitHub\\Sentimental-Chat\\pages\\index.js";
 
 function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
@@ -6331,7 +6341,10 @@ function (_Component) {
           lineNumber: 51
         }
       }, __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement("main", {
-        className: "container-fluid position-absolute h-100 bg-dark",
+        className: "container-fluid position-absolute h-100",
+        style: {
+          backgroundColor: '#2A275E'
+        },
         __source: {
           fileName: _jsxFileName,
           lineNumber: 52
@@ -6370,13 +6383,13 @@ function (_Component) {
         }
       }, __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement("span", {
         style: {
-          color: '#999'
+          color: '#fff'
         },
         __source: {
           fileName: _jsxFileName,
           lineNumber: 59
         }
-      }, "Welcome to Sentimental Chat, "), " ", user) : "Enter a username"), !user && __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement("input", {
+      }, "Welcome to Sentimental Chat")) : "Enter a username"), !user && __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement("input", {
         type: "text",
         className: "form-control mt-3 px-3 py-2",
         onKeyUp: this.handleKeyUp,
@@ -6387,7 +6400,10 @@ function (_Component) {
           lineNumber: 64
         }
       }))), __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement("section", {
-        className: "col-md-4 position-relative d-flex flex-wrap h-100 align-items-start align-content-between bg-white px-0",
+        className: "col-md-4 position-relative d-flex flex-wrap h-100 align-items-start align-content-between px-0",
+        style: {
+          backgroundColor: '#eee'
+        },
         __source: {
           fileName: _jsxFileName,
           lineNumber: 67
