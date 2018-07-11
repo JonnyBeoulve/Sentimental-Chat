@@ -82,7 +82,9 @@ module.exports =
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_axios___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_axios__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_pusher_js__ = __webpack_require__("pusher-js");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_pusher_js___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2_pusher_js__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__ChatMessage__ = __webpack_require__("./components/ChatMessage.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_next_link__ = __webpack_require__("next/link");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_next_link___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3_next_link__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__ChatMessage__ = __webpack_require__("./components/ChatMessage.js");
 var _jsxFileName = "C:\\Users\\Jonny\\Documents\\GitHub\\Sentimental-Chat\\components\\Chat.js";
 
 function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
@@ -98,6 +100,7 @@ function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) ===
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
 
 
 
@@ -144,12 +147,14 @@ function (_Component) {
       }
     });
     _this.state = {
-      chats: []
+      chatroom: 'chat-room',
+      chats: [],
+      showMenu: false
     };
     return _this;
   }
   /*========================================================================
-  // Upon mount connect to Pusher and channel subscription.
+  // Upon mount connect to Pusher and perform channel subscription.
   ========================================================================*/
 
 
@@ -162,7 +167,7 @@ function (_Component) {
         cluster: "us2",
         encrypted: true
       });
-      this.channel = this.pusher.subscribe('chat-room');
+      this.channel = this.pusher.subscribe(this.state.chatroom);
       this.channel.bind('new-message', function (_ref) {
         var _ref$chat = _ref.chat,
             chat = _ref$chat === void 0 ? null : _ref$chat;
@@ -205,7 +210,8 @@ function (_Component) {
 
     /*========================================================================
     // Display user's name and chat section. Each chat message is mapped
-    // between the header and message box.
+    // between the header and message box. Upon clicking the gear on the
+    // top right of the screen display a menu with buttons instead.
     ========================================================================*/
     value: function render() {
       var _this3 = this;
@@ -213,16 +219,19 @@ function (_Component) {
       return this.props.activeUser && __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_0_react__["Fragment"], {
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 82
+          lineNumber: 86
         }
       }, __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement("div", {
-        className: "border-bottom border-gray w-100 d-flex align-items-center bg-white",
+        className: "border-bottom border-gray w-100 align-items-center bg-white",
         style: {
+          display: 'flex',
+          flexDirection: 'row',
+          justifyContent: 'space-between',
           height: 90
         },
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 83
+          lineNumber: 87
         }
       }, __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement("img", {
         src: "https://i.pinimg.com/originals/56/f0/c7/56f0c7de57fdae6d0a9ddc43448b6dff.png",
@@ -232,23 +241,62 @@ function (_Component) {
         },
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 84
+          lineNumber: 88
         }
-      }), __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement("h2", {
+      }), !this.state.showMenu ? __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_0_react__["Fragment"], {
+        __source: {
+          fileName: _jsxFileName,
+          lineNumber: 90
+        }
+      }, __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement("h2", {
         className: "text-dark mb-0 mx-4 px-2",
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 85
+          lineNumber: 90
         }
-      }, this.props.activeUser)), __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement("div", {
+      }, this.props.activeUser)) : __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_0_react__["Fragment"], {
+        __source: {
+          fileName: _jsxFileName,
+          lineNumber: 91
+        }
+      }, __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement("h2", {
+        className: "text-dark mb-0 mx-4 px-2",
+        __source: {
+          fileName: _jsxFileName,
+          lineNumber: 91
+        }
+      }, "Menu")), __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement("img", {
+        onClick: function onClick(e) {
+          return _this3.setState(function (prevState) {
+            return {
+              showMenu: !prevState.showMenu
+            };
+          });
+        },
+        src: "https://www.shareicon.net/data/512x512/2017/02/09/878626_gear_512x512.png",
+        style: {
+          height: 60,
+          marginRight: 20,
+          cursor: 'pointer'
+        },
+        __source: {
+          fileName: _jsxFileName,
+          lineNumber: 92
+        }
+      })), !this.state.showMenu ? __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_0_react__["Fragment"], {
+        __source: {
+          fileName: _jsxFileName,
+          lineNumber: 95
+        }
+      }, __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement("div", {
         className: "px-4 pb-4 w-100 d-flex flex-row flex-wrap align-items-start align-content-start position-relative",
         style: {
-          height: 'calc(100% - 180px)',
+          height: 'calc(95% - 180px)',
           overflowY: 'scroll'
         },
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 87
+          lineNumber: 96
         }
       }, this.state.chats.map(function (chat, index) {
         var previous = Math.max(0, index - 1);
@@ -262,7 +310,7 @@ function (_Component) {
           key: index,
           __source: {
             fileName: _jsxFileName,
-            lineNumber: 97
+            lineNumber: 105
           }
         }, (isFirst || !inSequence || hasDelay) && __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement("div", {
           className: "d-block w-100 font-weight-bold text-dark mt-4 pb-1 px-1 text-".concat(position),
@@ -271,7 +319,7 @@ function (_Component) {
           },
           __source: {
             fileName: _jsxFileName,
-            lineNumber: 99
+            lineNumber: 107
           }
         }, __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement("span", {
           className: "d-block",
@@ -280,19 +328,19 @@ function (_Component) {
           },
           __source: {
             fileName: _jsxFileName,
-            lineNumber: 100
+            lineNumber: 108
           }
         }, String.fromCodePoint.apply(String, mood)), __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement("span", {
           __source: {
             fileName: _jsxFileName,
-            lineNumber: 103
+            lineNumber: 111
           }
-        }, chat.user || 'Anonymous')), __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_3__ChatMessage__["a" /* default */], {
+        }, chat.user || 'Anonymous')), __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_4__ChatMessage__["a" /* default */], {
           message: chat.message,
           position: position,
           __source: {
             fileName: _jsxFileName,
-            lineNumber: 107
+            lineNumber: 116
           }
         }));
       })), __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement("div", {
@@ -302,7 +350,7 @@ function (_Component) {
         },
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 112
+          lineNumber: 120
         }
       }, __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement("textarea", {
         className: "form-control px-3 py-2",
@@ -313,9 +361,55 @@ function (_Component) {
         },
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 113
+          lineNumber: 121
         }
-      })));
+      }))) : __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement("div", {
+        className: "px-2 pb-2 d-flex flex-row flex-wrap align-items-start position-relative",
+        style: {
+          height: 'calc(95% - 180px)'
+        },
+        __source: {
+          fileName: _jsxFileName,
+          lineNumber: 124
+        }
+      }, __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_3_next_link___default.a, {
+        href: {
+          pathname: '/about'
+        },
+        __source: {
+          fileName: _jsxFileName,
+          lineNumber: 125
+        }
+      }, __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement("button", {
+        style: {
+          display: 'block',
+          margin: '20px',
+          padding: '30px',
+          backgroundColor: '#2A275E',
+          color: '#fff',
+          border: 'none',
+          cursor: 'pointer'
+        },
+        __source: {
+          fileName: _jsxFileName,
+          lineNumber: 125
+        }
+      }, "About")), __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement("button", {
+        onClick: this.props.signout,
+        style: {
+          display: 'block',
+          margin: '20px',
+          padding: '30px',
+          backgroundColor: '#2A275E',
+          color: '#fff',
+          border: 'none',
+          cursor: 'pointer'
+        },
+        __source: {
+          fileName: _jsxFileName,
+          lineNumber: 126
+        }
+      }, "Signout")));
     }
   }]);
 
@@ -554,6 +648,15 @@ function (_Component) {
           });
         }
       }
+    }), Object.defineProperty(_assertThisInitialized(_this), "handleSignout", {
+      configurable: true,
+      enumerable: true,
+      writable: true,
+      value: function value(evt) {
+        _this.setState({
+          user: null
+        });
+      }
     }), _temp));
   }
 
@@ -583,7 +686,7 @@ function (_Component) {
       return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_2__components_Layout__["a" /* default */], {
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 51
+          lineNumber: 59
         }
       }, __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement("main", {
         className: "container-fluid position-absolute h-100",
@@ -592,25 +695,25 @@ function (_Component) {
         },
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 52
+          lineNumber: 60
         }
       }, __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement("div", {
         className: "row position-absolute w-100 h-100",
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 53
+          lineNumber: 61
         }
       }, __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement("section", {
         className: "col-md-8 d-flex flex-row flex-wrap align-items-center align-content-center px-5",
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 54
+          lineNumber: 62
         }
       }, __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement("div", {
         className: "px-5 mx-5",
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 55
+          lineNumber: 63
         }
       }, __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement("span", {
         className: "d-block w-100 h1 text-light",
@@ -619,12 +722,12 @@ function (_Component) {
         },
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 56
+          lineNumber: 64
         }
       }, user ? __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement("span", {
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 58
+          lineNumber: 66
         }
       }, __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement("span", {
         style: {
@@ -632,7 +735,7 @@ function (_Component) {
         },
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 59
+          lineNumber: 67
         }
       }, "Welcome to Sentimental Chat")) : "Enter a username"), !user && __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement("input", {
         type: "text",
@@ -642,7 +745,7 @@ function (_Component) {
         style: nameInputStyles,
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 64
+          lineNumber: 72
         }
       }))), __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement("section", {
         className: "col-md-4 position-relative d-flex flex-wrap h-100 align-items-start align-content-between px-0",
@@ -651,13 +754,14 @@ function (_Component) {
         },
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 67
+          lineNumber: 75
         }
       }, user && __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_1__components_Chat__["a" /* default */], {
         activeUser: user,
+        signout: this.handleSignout,
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 68
+          lineNumber: 76
         }
       })))));
     }
@@ -689,6 +793,13 @@ module.exports = require("axios");
 /***/ (function(module, exports) {
 
 module.exports = require("next/head");
+
+/***/ }),
+
+/***/ "next/link":
+/***/ (function(module, exports) {
+
+module.exports = require("next/link");
 
 /***/ }),
 

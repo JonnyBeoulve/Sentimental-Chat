@@ -26,6 +26,14 @@ class IndexPage extends Component {
         }
     }
 
+    /*========================================================================
+    // Set user back to null, removing the user from chat and placing them
+    // back at the introduction screen.
+    ========================================================================*/
+    handleSignout = evt => {
+        this.setState({ user: null });
+    }
+
     render() {
         const { user } = this.state;
 
@@ -65,7 +73,7 @@ class IndexPage extends Component {
                             </div>
                         </section>
                         <section className="col-md-4 position-relative d-flex flex-wrap h-100 align-items-start align-content-between px-0" style={{backgroundColor: '#eee'}}>
-                            { user && <Chat activeUser={user} /> }
+                            { user && <Chat activeUser={user} signout={this.handleSignout} /> }
                         </section>
                     </div>
                 </main>
