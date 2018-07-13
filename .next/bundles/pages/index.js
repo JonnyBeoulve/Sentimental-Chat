@@ -50,7 +50,8 @@ function (_Component) {
   _inherits(Chat, _Component);
 
   /*========================================================================
-  // Chat strings will be stored in the chats array.
+  // Store the name of the current chatroom, an array of chat messages,
+  // and a boolean for determining whether to show the menu or chat.
   ========================================================================*/
   function Chat() {
     var _this;
@@ -58,6 +59,50 @@ function (_Component) {
     _classCallCheck(this, Chat);
 
     _this = _possibleConstructorReturn(this, (Chat.__proto__ || Object.getPrototypeOf(Chat)).call(this));
+    Object.defineProperty(_assertThisInitialized(_this), "handleChangeChannel", {
+      configurable: true,
+      enumerable: true,
+      writable: true,
+      value: function value(channelName) {
+        _this.pusher.unsubscribe(_this.state.chatroom);
+
+        _this.pusher = new __WEBPACK_IMPORTED_MODULE_2_pusher_js___default.a("6af1d66989d10cf60b14", {
+          cluster: "us2",
+          encrypted: true
+        });
+        _this.channel = _this.pusher.subscribe(channelName);
+
+        _this.setState({
+          chatroom: channelName,
+          chats: [],
+          showIntroHeader: true
+        });
+
+        _this.channel.bind('new-message', function (_ref) {
+          var _ref$chat = _ref.chat,
+              chat = _ref$chat === void 0 ? null : _ref$chat;
+          var chats = _this.state.chats;
+          chat && chats.push(chat);
+
+          _this.setState({
+            chats: chats
+          });
+        });
+
+        _this.pusher.connection.bind('connected', function () {
+          __WEBPACK_IMPORTED_MODULE_1_axios___default.a.post('/messages').then(function (response) {
+            var chats = response.data.messages;
+
+            _this.setState({
+              chats: chats,
+              showMenu: false
+            });
+          }).catch(function (error) {
+            console.log('Connection bind failed. ' + error);
+          });
+        });
+      }
+    });
     Object.defineProperty(_assertThisInitialized(_this), "handleKeyUp", {
       configurable: true,
       enumerable: true,
@@ -72,85 +117,57 @@ function (_Component) {
             message: value,
             timestamp: +new Date()
           };
+          var room = _this.state.chatroom;
           evt.target.value = '';
-          __WEBPACK_IMPORTED_MODULE_1_axios___default.a.post('/message', chat);
+          __WEBPACK_IMPORTED_MODULE_1_axios___default.a.post('/message', {
+            chat: chat,
+            room: room
+          });
         }
       }
     });
     _this.state = {
-      chatroom: 'chat-room',
+      chatroom: '',
       chats: [],
-      showMenu: false
+      showIntroHeader: false,
+      showMenu: true
     };
     return _this;
   }
   /*========================================================================
-  // Upon mount connect to Pusher and perform channel subscription.
+  // Disconnect from pusher when component is unmounted.
   ========================================================================*/
 
 
   _createClass(Chat, [{
-    key: "componentDidMount",
-    value: function componentDidMount() {
-      var _this2 = this;
-
-      this.pusher = new __WEBPACK_IMPORTED_MODULE_2_pusher_js___default.a("6af1d66989d10cf60b14", {
-        cluster: "us2",
-        encrypted: true
-      });
-      this.channel = this.pusher.subscribe(this.state.chatroom);
-      this.channel.bind('new-message', function (_ref) {
-        var _ref$chat = _ref.chat,
-            chat = _ref$chat === void 0 ? null : _ref$chat;
-        var chats = _this2.state.chats;
-        chat && chats.push(chat);
-
-        _this2.setState({
-          chats: chats
-        });
-      });
-      /*========================================================================
-      // Retrieve all chat messages for this conversation stored on Pusher.
-      ========================================================================*/
-
-      this.pusher.connection.bind('connected', function () {
-        __WEBPACK_IMPORTED_MODULE_1_axios___default.a.post('/messages').then(function (response) {
-          var chats = response.data.messages;
-
-          _this2.setState({
-            chats: chats
-          });
-        });
-      });
-    }
-    /*========================================================================
-    // Disconnect from pusher when component is unmounted.
-    ========================================================================*/
-
-  }, {
     key: "componentWillUnmount",
     value: function componentWillUnmount() {
       this.pusher.disconnect();
     }
     /*========================================================================
-    // Handle event when user enters a chat message.
+    // This will handle subscription to the various chat channels that
+    // Sentimental Chat offers. First, we will unregister the current
+    // subscription if one exists before resetting chat state and setting
+    // a name for chatroom. Then, we will subscribe to the corresponding
+    // channel and create bindings to Pusher.
     ========================================================================*/
 
   }, {
     key: "render",
 
     /*========================================================================
-    // Display user's name and chat section. Each chat message is mapped
-    // between the header and message box. Upon clicking the gear on the
-    // top right of the screen display a menu with buttons instead.
+    // Two states exist within the chat window. One displays a menu with
+    // buttons for toggling between each chat room. The other shows all
+    // chat that has occurred in the room while the user has been present.
+    // Each chat by a user includes a sentiment emoji.
     ========================================================================*/
     value: function render() {
-      var _this3 = this;
+      var _this2 = this;
 
       return this.props.activeUser && __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_0_react__["Fragment"], {
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 86
+          lineNumber: 110
         }
       }, __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement("div", {
         className: "border-bottom border-gray w-100 align-items-center bg-white",
@@ -162,7 +179,12 @@ function (_Component) {
         },
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 87
+          lineNumber: 111
+        }
+      }, this.state.showIntroHeader ? __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_0_react__["Fragment"], {
+        __source: {
+          fileName: _jsxFileName,
+          lineNumber: 113
         }
       }, __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement("img", {
         src: "https://i.pinimg.com/originals/56/f0/c7/56f0c7de57fdae6d0a9ddc43448b6dff.png",
@@ -172,33 +194,27 @@ function (_Component) {
         },
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 88
+          lineNumber: 114
         }
-      }), !this.state.showMenu ? __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_0_react__["Fragment"], {
-        __source: {
-          fileName: _jsxFileName,
-          lineNumber: 90
-        }
-      }, __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement("h2", {
+      }), __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement("h2", {
         className: "text-dark mb-0 mx-4 px-2",
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 90
+          lineNumber: 116
         }
-      }, this.props.activeUser)) : __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_0_react__["Fragment"], {
+      }, this.state.showMenu ? __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_0_react__["Fragment"], {
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 91
+          lineNumber: 118
         }
-      }, __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement("h2", {
-        className: "text-dark mb-0 mx-4 px-2",
+      }, "Menu") : __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_0_react__["Fragment"], {
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 91
+          lineNumber: 121
         }
-      }, "Menu")), __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement("img", {
+      }, this.props.activeUser)), __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement("img", {
         onClick: function onClick(e) {
-          return _this3.setState(function (prevState) {
+          return _this2.setState(function (prevState) {
             return {
               showMenu: !prevState.showMenu
             };
@@ -212,12 +228,43 @@ function (_Component) {
         },
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 92
+          lineNumber: 125
         }
-      })), !this.state.showMenu ? __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_0_react__["Fragment"], {
+      })) : __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_0_react__["Fragment"], {
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 95
+          lineNumber: 128
+        }
+      }, __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement("img", {
+        src: "https://i.pinimg.com/originals/56/f0/c7/56f0c7de57fdae6d0a9ddc43448b6dff.png",
+        style: {
+          height: 60,
+          marginLeft: 20
+        },
+        __source: {
+          fileName: _jsxFileName,
+          lineNumber: 129
+        }
+      }), __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement("h2", {
+        className: "text-dark mb-0 mx-4 px-2",
+        __source: {
+          fileName: _jsxFileName,
+          lineNumber: 131
+        }
+      }, "Join A Chatroom"), __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement("img", {
+        src: "https://www.shareicon.net/data/512x512/2017/02/09/878626_gear_512x512.png",
+        style: {
+          height: 60,
+          marginRight: 20
+        },
+        __source: {
+          fileName: _jsxFileName,
+          lineNumber: 134
+        }
+      }))), !this.state.showMenu ? __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_0_react__["Fragment"], {
+        __source: {
+          fileName: _jsxFileName,
+          lineNumber: 139
         }
       }, __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement("div", {
         className: "px-4 pb-4 w-100 d-flex flex-row flex-wrap align-items-start align-content-start position-relative",
@@ -227,12 +274,12 @@ function (_Component) {
         },
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 96
+          lineNumber: 140
         }
       }, this.state.chats.map(function (chat, index) {
         var previous = Math.max(0, index - 1);
-        var previousChat = _this3.state.chats[previous];
-        var position = chat.user === _this3.props.activeUser ? "right" : "left";
+        var previousChat = _this2.state.chats[previous];
+        var position = chat.user === _this2.props.activeUser ? "right" : "left";
         var isFirst = previous === index;
         var inSequence = chat.user === previousChat.user;
         var hasDelay = Math.ceil((chat.timestamp - previousChat.timestamp) / (1000 * 60)) > 1;
@@ -241,37 +288,42 @@ function (_Component) {
           key: index,
           __source: {
             fileName: _jsxFileName,
-            lineNumber: 105
+            lineNumber: 149
           }
         }, (isFirst || !inSequence || hasDelay) && __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement("div", {
           className: "d-block w-100 font-weight-bold text-dark mt-4 pb-1 px-1 text-".concat(position),
           style: {
-            fontSize: '0.9rem'
+            fontSize: '1.2rem'
           },
           __source: {
             fileName: _jsxFileName,
-            lineNumber: 107
+            lineNumber: 151
           }
         }, __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement("span", {
-          className: "d-block",
+          __source: {
+            fileName: _jsxFileName,
+            lineNumber: 152
+          }
+        }, chat.user || 'Anonymous')), __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement("div", {
+          className: "d-block w-100 mt-2 pb-1 px-1 text-".concat(position),
           style: {
-            fontSize: '1.6rem'
+            fontSize: '1.5rem'
           },
           __source: {
             fileName: _jsxFileName,
-            lineNumber: 108
+            lineNumber: 157
           }
-        }, String.fromCodePoint.apply(String, mood)), __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement("span", {
+        }, __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement("span", {
           __source: {
             fileName: _jsxFileName,
-            lineNumber: 111
+            lineNumber: 158
           }
-        }, chat.user || 'Anonymous')), __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_4__ChatMessage__["a" /* default */], {
+        }, String.fromCodePoint.apply(String, mood))), __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_4__ChatMessage__["a" /* default */], {
           message: chat.message,
           position: position,
           __source: {
             fileName: _jsxFileName,
-            lineNumber: 116
+            lineNumber: 162
           }
         }));
       })), __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement("div", {
@@ -281,7 +333,7 @@ function (_Component) {
         },
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 120
+          lineNumber: 166
         }
       }, __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement("textarea", {
         className: "form-control px-3 py-2",
@@ -292,16 +344,144 @@ function (_Component) {
         },
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 121
+          lineNumber: 167
         }
-      }))) : __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement("div", {
-        className: "px-2 pb-2 d-flex flex-row flex-wrap align-items-start position-relative",
+      }))) : __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_0_react__["Fragment"], {
+        __source: {
+          fileName: _jsxFileName,
+          lineNumber: 170
+        }
+      }, __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement("div", {
+        className: "w-100 align-items-center",
         style: {
-          height: 'calc(95% - 180px)'
+          display: 'flex',
+          flexDirection: 'column',
+          height: 'auto',
+          color: '#FFF'
         },
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 124
+          lineNumber: 171
+        }
+      }, __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement("button", {
+        onClick: function onClick() {
+          return _this2.handleChangeChannel('general-chat');
+        },
+        style: {
+          display: 'block',
+          width: '40%',
+          margin: '5px',
+          padding: '20px',
+          backgroundColor: '#2A275E',
+          color: '#fff',
+          border: 'none',
+          cursor: 'pointer'
+        },
+        __source: {
+          fileName: _jsxFileName,
+          lineNumber: 172
+        }
+      }, "General Chat"), __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement("button", {
+        onClick: function onClick() {
+          return _this2.handleChangeChannel('gamer-chat');
+        },
+        style: {
+          display: 'block',
+          width: '40%',
+          margin: '5px',
+          padding: '20px',
+          backgroundColor: '#2A275E',
+          color: '#fff',
+          border: 'none',
+          cursor: 'pointer'
+        },
+        __source: {
+          fileName: _jsxFileName,
+          lineNumber: 173
+        }
+      }, "Gamer Chat"), __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement("button", {
+        onClick: function onClick() {
+          return _this2.handleChangeChannel('technology-chat');
+        },
+        style: {
+          display: 'block',
+          width: '40%',
+          margin: '5px',
+          padding: '20px',
+          backgroundColor: '#2A275E',
+          color: '#fff',
+          border: 'none',
+          cursor: 'pointer'
+        },
+        __source: {
+          fileName: _jsxFileName,
+          lineNumber: 174
+        }
+      }, "Technology Chat"), __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement("button", {
+        onClick: function onClick() {
+          return _this2.handleChangeChannel('rl-chat');
+        },
+        style: {
+          display: 'block',
+          width: '40%',
+          margin: '5px',
+          padding: '20px',
+          backgroundColor: '#2A275E',
+          color: '#fff',
+          border: 'none',
+          cursor: 'pointer'
+        },
+        __source: {
+          fileName: _jsxFileName,
+          lineNumber: 175
+        }
+      }, "RL Chat"), __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement("button", {
+        onClick: function onClick() {
+          return _this2.handleChangeChannel('introduction-chat');
+        },
+        style: {
+          display: 'block',
+          width: '40%',
+          margin: '5px',
+          padding: '20px',
+          backgroundColor: '#2A275E',
+          color: '#fff',
+          border: 'none',
+          cursor: 'pointer'
+        },
+        __source: {
+          fileName: _jsxFileName,
+          lineNumber: 176
+        }
+      }, "Introduction Chat"), __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement("button", {
+        onClick: function onClick() {
+          return _this2.handleChangeChannel('anything-chat');
+        },
+        style: {
+          display: 'block',
+          width: '40%',
+          margin: '5px',
+          padding: '20px',
+          backgroundColor: '#2A275E',
+          color: '#fff',
+          border: 'none',
+          cursor: 'pointer'
+        },
+        __source: {
+          fileName: _jsxFileName,
+          lineNumber: 177
+        }
+      }, "Anything Chat")), __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement("div", {
+        className: "w-100 align-items-center",
+        style: {
+          display: 'flex',
+          flexDirection: 'column',
+          height: 'auto',
+          color: '#FFF'
+        },
+        __source: {
+          fileName: _jsxFileName,
+          lineNumber: 179
         }
       }, __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_3_next_link___default.a, {
         href: {
@@ -309,13 +489,14 @@ function (_Component) {
         },
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 125
+          lineNumber: 180
         }
       }, __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement("button", {
         style: {
           display: 'block',
-          margin: '20px',
-          padding: '30px',
+          width: '40%',
+          margin: '5px',
+          padding: '20px',
           backgroundColor: '#2A275E',
           color: '#fff',
           border: 'none',
@@ -323,14 +504,15 @@ function (_Component) {
         },
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 125
+          lineNumber: 180
         }
       }, "About")), __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement("button", {
         onClick: this.props.signout,
         style: {
           display: 'block',
-          margin: '20px',
-          padding: '30px',
+          width: '40%',
+          margin: '5px',
+          padding: '20px',
           backgroundColor: '#2A275E',
           color: '#fff',
           border: 'none',
@@ -338,9 +520,9 @@ function (_Component) {
         },
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 126
+          lineNumber: 181
         }
-      }, "Signout")));
+      }, "Signout"))));
     }
   }]);
 
@@ -7315,6 +7497,11 @@ function (_Component) {
 
   _createClass(IndexPage, [{
     key: "render",
+
+    /*========================================================================
+    // Render top level page with main screen on the left and menu/chat
+    // window on the right.
+    ========================================================================*/
     value: function render() {
       var user = this.state.user;
       /*========================================================================
@@ -7339,7 +7526,7 @@ function (_Component) {
       return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_2__components_Layout__["a" /* default */], {
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 59
+          lineNumber: 63
         }
       }, __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement("main", {
         className: "container-fluid position-absolute h-100",
@@ -7348,25 +7535,25 @@ function (_Component) {
         },
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 60
+          lineNumber: 64
         }
       }, __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement("div", {
         className: "row position-absolute w-100 h-100",
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 61
+          lineNumber: 65
         }
       }, __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement("section", {
         className: "col-md-8 d-flex flex-row flex-wrap align-items-center align-content-center px-5",
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 62
+          lineNumber: 66
         }
       }, __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement("div", {
         className: "px-5 mx-5",
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 63
+          lineNumber: 67
         }
       }, __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement("span", {
         className: "d-block w-100 h1 text-light",
@@ -7375,12 +7562,12 @@ function (_Component) {
         },
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 64
+          lineNumber: 68
         }
       }, user ? __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement("span", {
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 66
+          lineNumber: 70
         }
       }, __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement("span", {
         style: {
@@ -7388,7 +7575,7 @@ function (_Component) {
         },
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 67
+          lineNumber: 71
         }
       }, "Welcome to Sentimental Chat")) : "Enter a username"), !user && __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement("input", {
         type: "text",
@@ -7398,7 +7585,7 @@ function (_Component) {
         style: nameInputStyles,
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 72
+          lineNumber: 76
         }
       }))), __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement("section", {
         className: "col-md-4 position-relative d-flex flex-wrap h-100 align-items-start align-content-between px-0",
@@ -7407,14 +7594,14 @@ function (_Component) {
         },
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 75
+          lineNumber: 79
         }
       }, user && __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_1__components_Chat__["a" /* default */], {
         activeUser: user,
         signout: this.handleSignout,
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 76
+          lineNumber: 80
         }
       })))));
     }

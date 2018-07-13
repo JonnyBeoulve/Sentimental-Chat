@@ -34,6 +34,10 @@ class IndexPage extends Component {
         this.setState({ user: null });
     }
 
+    /*========================================================================
+    // Render top level page with main screen on the left and menu/chat
+    // window on the right.
+    ========================================================================*/
     render() {
         const { user } = this.state;
 

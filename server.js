@@ -44,17 +44,22 @@ app.prepare()
         });
 
         /*========================================================================
-        // POST Route handlers for chat and message functionality.
+        // POST a new message to a chatroom. The name of the chatroom is passed
+        // in as req.body.room.
         ========================================================================*/
         server.post('/message', (req, res, next) => {
-            const { user = null, message = '', timestamp = +new Date } = req.body;
+            const { user = null, message = '', timestamp = + new Date } = req.body.chat;
             const sentimentScore = sentiment.analyze(message).score;
             const chat = { user, message, timestamp, sentiment: sentimentScore };
         
             chatHistory.messages.push(chat);
-            pusher.trigger('chat-room', 'new-message', { chat });
+            pusher.trigger(req.body.room, 'new-message', { chat });
         });
     
+        /*========================================================================
+        // Retrieve a list of all existing messages relevant to the user in a
+        // particular chatroom.
+        ========================================================================*/
         server.post('/messages', (req, res, next) => {
             res.json({ ...chatHistory, status: 'success' });
         });

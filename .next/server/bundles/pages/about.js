@@ -163,7 +163,7 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 
 
 /*========================================================================
-// The main page of the app where core functionality is contained.
+// An about page for Sentimental Chat.
 ========================================================================*/
 
 var About =
@@ -181,13 +181,12 @@ function (_Component) {
     key: "render",
     value: function render() {
       /*========================================================================
-      // Initially display enter name field. Once a name has been provided,
-      // display chat.
+      // Describe the app and provided links for more information.
       ========================================================================*/
       return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_2__components_Layout__["a" /* default */], {
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 18
+          lineNumber: 17
         }
       }, __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement("main", {
         className: "container-fluid position-absolute h-100",
@@ -196,25 +195,25 @@ function (_Component) {
         },
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 19
+          lineNumber: 18
         }
       }, __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement("div", {
         className: "row position-absolute w-100 h-100",
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 20
+          lineNumber: 19
         }
       }, __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement("section", {
         className: "col-md-8 d-flex flex-row flex-wrap align-items-center align-content-center px-5",
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 21
+          lineNumber: 20
         }
       }, __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement("div", {
         className: "px-5 mx-5",
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 22
+          lineNumber: 21
         }
       }, __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement("span", {
         className: "d-block w-100 text-light",
@@ -223,7 +222,7 @@ function (_Component) {
         },
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 23
+          lineNumber: 22
         }
       }, __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement("h1", {
         style: {
@@ -231,7 +230,7 @@ function (_Component) {
         },
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 24
+          lineNumber: 23
         }
       }, "About"), __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement("p", {
         style: {
@@ -239,7 +238,7 @@ function (_Component) {
         },
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 25
+          lineNumber: 24
         }
       }, "Sentimental Chat is a real-time chat web app that includes sentiment analysis with Next.js server-side rendering and a Node/Express based back-end."), __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement("p", {
         style: {
@@ -247,14 +246,14 @@ function (_Component) {
         },
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 26
+          lineNumber: 25
         }
       }, "To view code and more information, check out the official repository: ", __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement("a", {
         href: "https://github.com/JonnyBeoulve/Sentimental-Chat",
         target: "_blank",
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 26
+          lineNumber: 25
         }
       }, __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement("img", {
         src: "http://pluspng.com/img-png/github-free-icon-512.png",
@@ -265,7 +264,7 @@ function (_Component) {
         },
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 26
+          lineNumber: 25
         }
       }))), __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_1_next_link___default.a, {
         href: {
@@ -273,7 +272,7 @@ function (_Component) {
         },
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 27
+          lineNumber: 26
         }
       }, "Return to Sentimental Chat")))))));
     }

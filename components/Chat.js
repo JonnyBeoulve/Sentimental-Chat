@@ -15,27 +15,48 @@ const NEUTRAL_EMOJI = [55357, 56848];
 class Chat extends Component {
 
     /*========================================================================
-    // Chat strings will be stored in the chats array.
+    // Store the name of the current chatroom, an array of chat messages,
+    // and a boolean for determining whether to show the menu or chat.
     ========================================================================*/
     constructor() {
         super();
         this.state = {
-            chatroom: 'chat-room',
+            chatroom: '',
             chats: [],
-            showMenu: false
+            showIntroHeader: false,
+            showMenu: true,
         };
     }
 
     /*========================================================================
-    // Upon mount connect to Pusher and perform channel subscription.
+    // Disconnect from pusher when component is unmounted.
     ========================================================================*/
-    componentDidMount() {
+    componentWillUnmount() {
+        this.pusher.disconnect();
+    }
+
+    /*========================================================================
+    // This will handle subscription to the various chat channels that
+    // Sentimental Chat offers. First, we will unregister the current
+    // subscription if one exists before resetting chat state and setting
+    // a name for chatroom. Then, we will subscribe to the corresponding
+    // channel and create bindings to Pusher.
+    ========================================================================*/
+    handleChangeChannel = channelName => {
+        this.pusher.unsubscribe(this.state.chatroom);
+
         this.pusher = new Pusher(process.env.PUSHER_APP_KEY, {
             cluster: process.env.PUSHER_APP_CLUSTER,
             encrypted: true
         });
 
-        this.channel = this.pusher.subscribe(this.state.chatroom);
+        this.channel = this.pusher.subscribe(channelName);
+        
+        this.setState({ 
+            chatroom: channelName,
+            chats: [],
+            showIntroHeader: true,
+        });
 
         this.channel.bind('new-message', ({ chat = null }) => {
             const { chats } = this.state;
@@ -43,22 +64,19 @@ class Chat extends Component {
             this.setState({ chats });
         });
 
-        /*========================================================================
-        // Retrieve all chat messages for this conversation stored on Pusher.
-        ========================================================================*/
         this.pusher.connection.bind('connected', () => {
             axios.post('/messages')
                 .then(response => {
                     const chats = response.data.messages;
-                    this.setState({ chats });
+                    this.setState({ 
+                        chats,
+                        showMenu: false 
+                    });
+                })
+                .catch(error => {
+                    console.log('Connection bind failed. ' + error);
                 });
         });
-    }
-    /*========================================================================
-    // Disconnect from pusher when component is unmounted.
-    ========================================================================*/
-    componentWillUnmount() {
-        this.pusher.disconnect();
     }
 
     /*========================================================================
@@ -71,26 +89,51 @@ class Chat extends Component {
         if (evt.keyCode === 13 && !evt.shiftKey) {
           const { activeUser: user } = this.props;
           const chat = { user, message: value, timestamp: + new Date };
+          const room = this.state.chatroom;
   
           evt.target.value = '';
-          axios.post('/message', chat);
+          axios.post('/message', {
+              chat, 
+              room
+          });
         }
     }
   
     /*========================================================================
-    // Display user's name and chat section. Each chat message is mapped
-    // between the header and message box. Upon clicking the gear on the
-    // top right of the screen display a menu with buttons instead.
+    // Two states exist within the chat window. One displays a menu with
+    // buttons for toggling between each chat room. The other shows all
+    // chat that has occurred in the room while the user has been present.
+    // Each chat by a user includes a sentiment emoji.
     ========================================================================*/
     render() {
         return (
             this.props.activeUser && <Fragment>
                 <div className="border-bottom border-gray w-100 align-items-center bg-white" style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', height: 90 }}>
-                    <img src="https://i.pinimg.com/originals/56/f0/c7/56f0c7de57fdae6d0a9ddc43448b6dff.png" style={{ height: 60, marginLeft: 20 }}></img>
-                        { (!this.state.showMenu)
-                            ? <Fragment><h2 className="text-dark mb-0 mx-4 px-2">{this.props.activeUser}</h2></Fragment>
-                            : <Fragment><h2 className="text-dark mb-0 mx-4 px-2">Menu</h2></Fragment> }
-                    <img onClick={e => this.setState(prevState => ({ showMenu: !prevState.showMenu }))} src="https://www.shareicon.net/data/512x512/2017/02/09/878626_gear_512x512.png" style={{ height: 60, marginRight: 20, cursor: 'pointer' }}></img>
+                    { (this.state.showIntroHeader)
+                        ? <Fragment>
+                            <img src="https://i.pinimg.com/originals/56/f0/c7/56f0c7de57fdae6d0a9ddc43448b6dff.png" style={{ height: 60, marginLeft: 20 }}>
+                            </img>
+                            <h2 className="text-dark mb-0 mx-4 px-2">
+                                { (this.state.showMenu)
+                                    ? <Fragment>
+                                        Menu
+                                    </Fragment>
+                                    : <Fragment>
+                                        {this.props.activeUser}
+                                    </Fragment> }
+                            </h2>
+                            <img onClick={e => this.setState(prevState => ({ showMenu: !prevState.showMenu }))} src="https://www.shareicon.net/data/512x512/2017/02/09/878626_gear_512x512.png" style={{ height: 60, marginRight: 20, cursor: 'pointer' }}>
+                            </img>
+                        </Fragment>
+                        : <Fragment>
+                            <img src="https://i.pinimg.com/originals/56/f0/c7/56f0c7de57fdae6d0a9ddc43448b6dff.png" style={{ height: 60, marginLeft: 20 }}>
+                            </img>
+                            <h2 className="text-dark mb-0 mx-4 px-2">
+                                Join A Chatroom
+                            </h2>
+                            <img src="https://www.shareicon.net/data/512x512/2017/02/09/878626_gear_512x512.png" style={{ height: 60, marginRight: 20 }}>
+                            </img>
+                        </Fragment> }
                 </div>
                 { (!this.state.showMenu)
                     ? <Fragment>
@@ -105,15 +148,17 @@ class Chat extends Component {
                             return (
                                 <Fragment key={index}>
                                     { (isFirst || !inSequence || hasDelay) && (
-                                        <div className={`d-block w-100 font-weight-bold text-dark mt-4 pb-1 px-1 text-${position}`} style={{ fontSize: '0.9rem' }}>
-                                            <span className="d-block" style={{ fontSize: '1.6rem' }}>
-                                                {String.fromCodePoint(...mood)}
-                                            </span>
+                                        <div className={`d-block w-100 font-weight-bold text-dark mt-4 pb-1 px-1 text-${position}`} style={{ fontSize: '1.2rem' }}>
                                             <span>
                                                 {chat.user || 'Anonymous'}
                                             </span>
                                         </div>
                                     ) }
+                                    <div className={`d-block w-100 mt-2 pb-1 px-1 text-${position}`} style={{ fontSize: '1.5rem' }}>
+                                        <span>
+                                            {String.fromCodePoint(...mood)}
+                                        </span>
+                                    </div>
                                     <ChatMessage message={chat.message} position={position} />
                                 </Fragment>
                             );
@@ -122,10 +167,20 @@ class Chat extends Component {
                             <textarea className="form-control px-3 py-2" onKeyUp={this.handleKeyUp} placeholder="Enter a chat message" style={{ resize: 'none' }}></textarea>
                         </div>
                     </Fragment>
-                    : <div className="px-2 pb-2 d-flex flex-row flex-wrap align-items-start position-relative" style={{ height: 'calc(95% - 180px)' }}>
-                        <Link href={{ pathname: '/about' }}><button style={{ display: 'block', margin: '20px', padding: '30px', backgroundColor: '#2A275E', color: '#fff', border: 'none', cursor: 'pointer' }}>About</button></Link>
-                        <button onClick={this.props.signout} style={{ display: 'block', margin: '20px', padding: '30px', backgroundColor: '#2A275E', color: '#fff', border: 'none', cursor: 'pointer' }}>Signout</button>
-                    </div> }
+                    : <Fragment>
+                        <div className="w-100 align-items-center" style={{ display: 'flex', flexDirection: 'column', height: 'auto', color: '#FFF' }}>
+                            <button onClick={() => this.handleChangeChannel('general-chat')} style={{ display: 'block', width: '40%', margin: '5px', padding: '20px', backgroundColor: '#2A275E', color: '#fff', border: 'none', cursor: 'pointer' }}>General Chat</button>
+                            <button onClick={() => this.handleChangeChannel('gamer-chat')} style={{ display: 'block', width: '40%', margin: '5px', padding: '20px', backgroundColor: '#2A275E', color: '#fff', border: 'none', cursor: 'pointer' }}>Gamer Chat</button>
+                            <button onClick={() => this.handleChangeChannel('technology-chat')} style={{ display: 'block', width: '40%', margin: '5px', padding: '20px', backgroundColor: '#2A275E', color: '#fff', border: 'none', cursor: 'pointer' }}>Technology Chat</button>
+                            <button onClick={() => this.handleChangeChannel('rl-chat')} style={{ display: 'block', width: '40%', margin: '5px', padding: '20px', backgroundColor: '#2A275E', color: '#fff', border: 'none', cursor: 'pointer' }}>RL Chat</button>
+                            <button onClick={() => this.handleChangeChannel('introduction-chat')} style={{ display: 'block', width: '40%', margin: '5px', padding: '20px', backgroundColor: '#2A275E', color: '#fff', border: 'none', cursor: 'pointer' }}>Introduction Chat</button>
+                            <button onClick={() => this.handleChangeChannel('anything-chat')} style={{ display: 'block', width: '40%', margin: '5px', padding: '20px', backgroundColor: '#2A275E', color: '#fff', border: 'none', cursor: 'pointer' }}>Anything Chat</button>
+                        </div>
+                        <div className="w-100 align-items-center" style={{ display: 'flex', flexDirection: 'column', height: 'auto', color: '#FFF' }}>
+                            <Link href={{ pathname: '/about' }}><button style={{ display: 'block', width: '40%', margin: '5px', padding: '20px', backgroundColor: '#2A275E', color: '#fff', border: 'none', cursor: 'pointer' }}>About</button></Link>
+                            <button onClick={this.props.signout} style={{ display: 'block', width: '40%', margin: '5px', padding: '20px', backgroundColor: '#2A275E', color: '#fff', border: 'none', cursor: 'pointer' }}>Signout</button>
+                        </div>
+                    </Fragment> }
             </Fragment> 
         )
     }
