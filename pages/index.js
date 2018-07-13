@@ -68,7 +68,10 @@ class IndexPage extends Component {
                                 <span className="d-block w-100 h1 text-light" style={{marginTop: -50}}>
                                     { user
                                         ? ( <span>
-                                                <span style={{color: '#fff'}}>Welcome to Sentimental Chat</span>
+                                                <span style={{color: '#fff'}}>Welcome to Sentimental Chat,</span>
+                                                <br />
+                                                <span style={{color: '#aaa'}}>{this.state.user}</span>
+                                                <span style={{color: '#fff'}}>!</span>
                                             </span>)
                                         : `Enter a username`
                                     }

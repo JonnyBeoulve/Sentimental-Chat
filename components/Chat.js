@@ -21,11 +21,20 @@ class Chat extends Component {
     constructor() {
         super();
         this.state = {
-            chatroom: '',
+            chatroom: 'general-chat',
             chats: [],
-            showIntroHeader: false,
             showMenu: true,
         };
+    }
+
+    /*========================================================================
+    // Create Pusher object to provide API reference to Pusher services.
+    ========================================================================*/
+    componentDidMount() {
+        this.pusher = new Pusher(process.env.PUSHER_APP_KEY, {
+            cluster: process.env.PUSHER_APP_CLUSTER,
+            encrypted: true
+        });
     }
 
     /*========================================================================
@@ -43,12 +52,7 @@ class Chat extends Component {
     // channel and create bindings to Pusher.
     ========================================================================*/
     handleChangeChannel = channelName => {
-        this.pusher.unsubscribe(this.state.chatroom);
-
-        this.pusher = new Pusher(process.env.PUSHER_APP_KEY, {
-            cluster: process.env.PUSHER_APP_CLUSTER,
-            encrypted: true
-        });
+        if (this.state.chatroom.length > 0) this.pusher.unsubscribe(this.state.chatroom);
 
         this.channel = this.pusher.subscribe(channelName);
         
@@ -61,22 +65,23 @@ class Chat extends Component {
         this.channel.bind('new-message', ({ chat = null }) => {
             const { chats } = this.state;
             chat && chats.push(chat);
-            this.setState({ chats });
+            this.setState({ 
+                chats,
+                showMenu: false 
+             });
         });
 
-        this.pusher.connection.bind('connected', () => {
-            axios.post('/messages')
-                .then(response => {
-                    const chats = response.data.messages;
-                    this.setState({ 
-                        chats,
-                        showMenu: false 
-                    });
-                })
-                .catch(error => {
-                    console.log('Connection bind failed. ' + error);
+        axios.post('/messages')
+            .then(response => {
+                const chats = response.data.messages;
+                this.setState({ 
+                    chats,
+                    showMenu: false 
                 });
-        });
+            })
+            .catch(error => {
+                console.log('Connection bind failed. ' + error);
+            });
     }
 
     /*========================================================================
@@ -109,31 +114,19 @@ class Chat extends Component {
         return (
             this.props.activeUser && <Fragment>
                 <div className="border-bottom border-gray w-100 align-items-center bg-white" style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', height: 90 }}>
-                    { (this.state.showIntroHeader)
-                        ? <Fragment>
-                            <img src="https://i.pinimg.com/originals/56/f0/c7/56f0c7de57fdae6d0a9ddc43448b6dff.png" style={{ height: 60, marginLeft: 20 }}>
-                            </img>
-                            <h2 className="text-dark mb-0 mx-4 px-2">
-                                { (this.state.showMenu)
-                                    ? <Fragment>
-                                        Menu
-                                    </Fragment>
-                                    : <Fragment>
-                                        {this.props.activeUser}
-                                    </Fragment> }
-                            </h2>
-                            <img onClick={e => this.setState(prevState => ({ showMenu: !prevState.showMenu }))} src="https://www.shareicon.net/data/512x512/2017/02/09/878626_gear_512x512.png" style={{ height: 60, marginRight: 20, cursor: 'pointer' }}>
-                            </img>
-                        </Fragment>
-                        : <Fragment>
-                            <img src="https://i.pinimg.com/originals/56/f0/c7/56f0c7de57fdae6d0a9ddc43448b6dff.png" style={{ height: 60, marginLeft: 20 }}>
-                            </img>
-                            <h2 className="text-dark mb-0 mx-4 px-2">
-                                Join A Chatroom
-                            </h2>
-                            <img src="https://www.shareicon.net/data/512x512/2017/02/09/878626_gear_512x512.png" style={{ height: 60, marginRight: 20 }}>
-                            </img>
-                        </Fragment> }
+                    <img src="https://i.pinimg.com/originals/56/f0/c7/56f0c7de57fdae6d0a9ddc43448b6dff.png" style={{ height: 60, marginLeft: 20 }}>
+                    </img>
+                    <h2 className="text-dark mb-0 mx-4 px-2">
+                        { (this.state.showMenu)
+                            ? <Fragment>
+                                Menu
+                            </Fragment>
+                            : <Fragment>
+                                {this.state.chatroom}
+                            </Fragment> }
+                    </h2>
+                    <img onClick={e => this.setState(prevState => ({ showMenu: !prevState.showMenu }))} src="https://www.shareicon.net/data/512x512/2017/02/09/878626_gear_512x512.png" style={{ height: 60, marginRight: 20, cursor: 'pointer' }}>
+                    </img>
                 </div>
                 { (!this.state.showMenu)
                     ? <Fragment>
