@@ -93,7 +93,7 @@ function (_Component) {
             showMenu: false
           });
         }).catch(function (error) {
-          console.log('Connection bind failed. ' + error);
+          console.log('Messages fetch failed. ' + error);
         });
       }
     });
@@ -121,7 +121,7 @@ function (_Component) {
       }
     });
     _this.state = {
-      chatroom: 'general-chat',
+      chatroom: '',
       chats: [],
       showMenu: true
     };
@@ -161,10 +161,14 @@ function (_Component) {
     key: "render",
 
     /*========================================================================
-    // Two states exist within the chat window. One displays a menu with
-    // buttons for toggling between each chat room. The other shows all
-    // chat that has occurred in the room while the user has been present.
-    // Each chat by a user includes a sentiment emoji.
+    // The Chat div is rendered on the right-side of the screen. Initially,
+    // it will display a top bar that instructs the user to 'Select a 
+    // Chatroom', with a selection of rooms along with an About and Signout
+    // button. Once a user selects a chatroom, change the top bar to show
+    // a profile avatar, the name of the chatroom, and a menu button.
+    // Below is a list of chat messages within that chatroom. Upon clicking
+    // the menu button, display the same chatroom, about, and signout buttons
+    // as during the introduction.
     ========================================================================*/
     value: function render() {
       var _this2 = this;
@@ -172,9 +176,9 @@ function (_Component) {
       return this.props.activeUser && __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_0_react__["Fragment"], {
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 115
+          lineNumber: 119
         }
-      }, __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement("div", {
+      }, this.state.chatroom ? __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement("div", {
         className: "border-bottom border-gray w-100 align-items-center bg-white",
         style: {
           display: 'flex',
@@ -184,33 +188,34 @@ function (_Component) {
         },
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 116
+          lineNumber: 121
         }
       }, __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement("img", {
         src: "https://i.pinimg.com/originals/56/f0/c7/56f0c7de57fdae6d0a9ddc43448b6dff.png",
+        alt: "Default avatar PNG",
         style: {
           height: 60,
           marginLeft: 20
         },
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 117
+          lineNumber: 122
         }
       }), __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement("h2", {
         className: "text-dark mb-0 mx-4 px-2",
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 119
+          lineNumber: 124
         }
       }, this.state.showMenu ? __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_0_react__["Fragment"], {
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 121
+          lineNumber: 126
         }
       }, "Menu") : __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_0_react__["Fragment"], {
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 124
+          lineNumber: 129
         }
       }, this.state.chatroom)), __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement("img", {
         onClick: function onClick(e) {
@@ -221,6 +226,7 @@ function (_Component) {
           });
         },
         src: "https://www.shareicon.net/data/512x512/2017/02/09/878626_gear_512x512.png",
+        alt: "Gear cog PNG",
         style: {
           height: 60,
           marginRight: 20,
@@ -228,12 +234,57 @@ function (_Component) {
         },
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 128
+          lineNumber: 133
+        }
+      })) : __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement("div", {
+        className: "border-bottom border-gray w-100 align-items-center bg-white",
+        style: {
+          display: 'flex',
+          flexDirection: 'row',
+          justifyContent: 'space-between',
+          height: 90
+        },
+        __source: {
+          fileName: _jsxFileName,
+          lineNumber: 136
+        }
+      }, __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement("img", {
+        src: "http://pixsector.com/cache/0688783e/avbf566659ab2bdf82f87.png",
+        alt: "Down arrow PNG",
+        style: {
+          height: 60,
+          marginRight: 20
+        },
+        __source: {
+          fileName: _jsxFileName,
+          lineNumber: 137
+        }
+      }), __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement("h2", {
+        className: "text-dark mb-0 mx-4 px-2",
+        __source: {
+          fileName: _jsxFileName,
+          lineNumber: 139
+        }
+      }, __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_0_react__["Fragment"], {
+        __source: {
+          fileName: _jsxFileName,
+          lineNumber: 140
+        }
+      }, "Select a Chatroom")), __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement("img", {
+        src: "http://pixsector.com/cache/0688783e/avbf566659ab2bdf82f87.png",
+        alt: "Down arrow PNG",
+        style: {
+          height: 60,
+          marginRight: 20
+        },
+        __source: {
+          fileName: _jsxFileName,
+          lineNumber: 144
         }
       })), !this.state.showMenu ? __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_0_react__["Fragment"], {
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 132
+          lineNumber: 148
         }
       }, __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement("div", {
         className: "px-4 pb-4 w-100 d-flex flex-row flex-wrap align-items-start align-content-start position-relative",
@@ -243,7 +294,7 @@ function (_Component) {
         },
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 133
+          lineNumber: 149
         }
       }, this.state.chats.map(function (chat, index) {
         var previous = Math.max(0, index - 1);
@@ -257,7 +308,7 @@ function (_Component) {
           key: index,
           __source: {
             fileName: _jsxFileName,
-            lineNumber: 142
+            lineNumber: 158
           }
         }, (isFirst || !inSequence || hasDelay) && __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement("div", {
           className: "d-block w-100 font-weight-bold text-dark mt-4 pb-1 px-1 text-".concat(position),
@@ -266,12 +317,12 @@ function (_Component) {
           },
           __source: {
             fileName: _jsxFileName,
-            lineNumber: 144
+            lineNumber: 160
           }
         }, __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement("span", {
           __source: {
             fileName: _jsxFileName,
-            lineNumber: 145
+            lineNumber: 161
           }
         }, chat.user || 'Anonymous')), __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement("div", {
           className: "d-block w-100 mt-2 pb-1 px-1 text-".concat(position),
@@ -280,19 +331,19 @@ function (_Component) {
           },
           __source: {
             fileName: _jsxFileName,
-            lineNumber: 150
+            lineNumber: 166
           }
         }, __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement("span", {
           __source: {
             fileName: _jsxFileName,
-            lineNumber: 151
+            lineNumber: 167
           }
         }, String.fromCodePoint.apply(String, mood))), __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_4__ChatMessage__["a" /* default */], {
           message: chat.message,
           position: position,
           __source: {
             fileName: _jsxFileName,
-            lineNumber: 155
+            lineNumber: 171
           }
         }));
       })), __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement("div", {
@@ -302,7 +353,7 @@ function (_Component) {
         },
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 159
+          lineNumber: 175
         }
       }, __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement("textarea", {
         className: "form-control px-3 py-2",
@@ -313,12 +364,12 @@ function (_Component) {
         },
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 160
+          lineNumber: 176
         }
       }))) : __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_0_react__["Fragment"], {
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 163
+          lineNumber: 179
         }
       }, __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement("div", {
         className: "w-100 align-items-center",
@@ -330,11 +381,11 @@ function (_Component) {
         },
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 164
+          lineNumber: 180
         }
       }, __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement("button", {
         onClick: function onClick() {
-          return _this2.handleChangeChannel('general-chat');
+          return _this2.handleChangeChannel('General-Chat');
         },
         style: {
           display: 'block',
@@ -348,11 +399,11 @@ function (_Component) {
         },
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 165
+          lineNumber: 181
         }
       }, "General Chat"), __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement("button", {
         onClick: function onClick() {
-          return _this2.handleChangeChannel('gamer-chat');
+          return _this2.handleChangeChannel('Gamer-Chat');
         },
         style: {
           display: 'block',
@@ -366,11 +417,11 @@ function (_Component) {
         },
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 166
+          lineNumber: 182
         }
       }, "Gamer Chat"), __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement("button", {
         onClick: function onClick() {
-          return _this2.handleChangeChannel('technology-chat');
+          return _this2.handleChangeChannel('Technology-Chat');
         },
         style: {
           display: 'block',
@@ -384,11 +435,11 @@ function (_Component) {
         },
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 167
+          lineNumber: 183
         }
       }, "Technology Chat"), __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement("button", {
         onClick: function onClick() {
-          return _this2.handleChangeChannel('rl-chat');
+          return _this2.handleChangeChannel('RL-Chat');
         },
         style: {
           display: 'block',
@@ -402,11 +453,11 @@ function (_Component) {
         },
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 168
+          lineNumber: 184
         }
       }, "RL Chat"), __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement("button", {
         onClick: function onClick() {
-          return _this2.handleChangeChannel('introduction-chat');
+          return _this2.handleChangeChannel('Introduction-Chat');
         },
         style: {
           display: 'block',
@@ -420,27 +471,9 @@ function (_Component) {
         },
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 169
+          lineNumber: 185
         }
-      }, "Introduction Chat"), __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement("button", {
-        onClick: function onClick() {
-          return _this2.handleChangeChannel('anything-chat');
-        },
-        style: {
-          display: 'block',
-          width: '40%',
-          margin: '5px',
-          padding: '20px',
-          backgroundColor: '#2A275E',
-          color: '#fff',
-          border: 'none',
-          cursor: 'pointer'
-        },
-        __source: {
-          fileName: _jsxFileName,
-          lineNumber: 170
-        }
-      }, "Anything Chat")), __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement("div", {
+      }, "Introduction Chat")), __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement("div", {
         className: "w-100 align-items-center",
         style: {
           display: 'flex',
@@ -450,7 +483,7 @@ function (_Component) {
         },
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 172
+          lineNumber: 187
         }
       }, __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_3_next_link___default.a, {
         href: {
@@ -458,7 +491,7 @@ function (_Component) {
         },
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 173
+          lineNumber: 188
         }
       }, __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement("button", {
         style: {
@@ -473,7 +506,7 @@ function (_Component) {
         },
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 173
+          lineNumber: 188
         }
       }, "About")), __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement("button", {
         onClick: this.props.signout,
@@ -489,7 +522,7 @@ function (_Component) {
         },
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 174
+          lineNumber: 189
         }
       }, "Signout"))));
     }
@@ -7567,7 +7600,7 @@ function (_Component) {
           fileName: _jsxFileName,
           lineNumber: 74
         }
-      }, "!")) : "Enter a username"), !user && __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement("input", {
+      }, "!")) : "Enter a username below to begin."), !user && __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement("input", {
         type: "text",
         className: "form-control mt-3 px-3 py-2",
         onKeyUp: this.handleKeyUp,

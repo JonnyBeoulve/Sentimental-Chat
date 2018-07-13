@@ -21,7 +21,7 @@ class Chat extends Component {
     constructor() {
         super();
         this.state = {
-            chatroom: 'general-chat',
+            chatroom: '',
             chats: [],
             showMenu: true,
         };
@@ -80,7 +80,7 @@ class Chat extends Component {
                 });
             })
             .catch(error => {
-                console.log('Connection bind failed. ' + error);
+                console.log('Messages fetch failed. ' + error);
             });
     }
 
@@ -105,29 +105,45 @@ class Chat extends Component {
     }
   
     /*========================================================================
-    // Two states exist within the chat window. One displays a menu with
-    // buttons for toggling between each chat room. The other shows all
-    // chat that has occurred in the room while the user has been present.
-    // Each chat by a user includes a sentiment emoji.
+    // The Chat div is rendered on the right-side of the screen. Initially,
+    // it will display a top bar that instructs the user to 'Select a 
+    // Chatroom', with a selection of rooms along with an About and Signout
+    // button. Once a user selects a chatroom, change the top bar to show
+    // a profile avatar, the name of the chatroom, and a menu button.
+    // Below is a list of chat messages within that chatroom. Upon clicking
+    // the menu button, display the same chatroom, about, and signout buttons
+    // as during the introduction.
     ========================================================================*/
     render() {
         return (
             this.props.activeUser && <Fragment>
-                <div className="border-bottom border-gray w-100 align-items-center bg-white" style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', height: 90 }}>
-                    <img src="https://i.pinimg.com/originals/56/f0/c7/56f0c7de57fdae6d0a9ddc43448b6dff.png" style={{ height: 60, marginLeft: 20 }}>
-                    </img>
-                    <h2 className="text-dark mb-0 mx-4 px-2">
-                        { (this.state.showMenu)
-                            ? <Fragment>
-                                Menu
-                            </Fragment>
-                            : <Fragment>
-                                {this.state.chatroom}
-                            </Fragment> }
-                    </h2>
-                    <img onClick={e => this.setState(prevState => ({ showMenu: !prevState.showMenu }))} src="https://www.shareicon.net/data/512x512/2017/02/09/878626_gear_512x512.png" style={{ height: 60, marginRight: 20, cursor: 'pointer' }}>
-                    </img>
-                </div>
+                { this.state.chatroom 
+                    ? <div className="border-bottom border-gray w-100 align-items-center bg-white" style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', height: 90 }}>
+                        <img src="https://i.pinimg.com/originals/56/f0/c7/56f0c7de57fdae6d0a9ddc43448b6dff.png" alt="Default avatar PNG" style={{ height: 60, marginLeft: 20 }}>
+                        </img>
+                        <h2 className="text-dark mb-0 mx-4 px-2">
+                            { (this.state.showMenu)
+                                ? <Fragment>
+                                    Menu
+                                </Fragment>
+                                : <Fragment>
+                                    {this.state.chatroom}
+                                </Fragment> }
+                        </h2>
+                        <img onClick={e => this.setState(prevState => ({ showMenu: !prevState.showMenu }))} src="https://www.shareicon.net/data/512x512/2017/02/09/878626_gear_512x512.png" alt="Gear cog PNG" style={{ height: 60, marginRight: 20, cursor: 'pointer' }}>
+                        </img>
+                    </div>
+                    : <div className="border-bottom border-gray w-100 align-items-center bg-white" style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', height: 90 }}>
+                        <img src="http://pixsector.com/cache/0688783e/avbf566659ab2bdf82f87.png" alt="Down arrow PNG" style={{ height: 60, marginRight: 20 }}>
+                        </img>
+                        <h2 className="text-dark mb-0 mx-4 px-2">
+                            <Fragment>
+                                Select a Chatroom
+                            </Fragment>   
+                        </h2>
+                        <img src="http://pixsector.com/cache/0688783e/avbf566659ab2bdf82f87.png" alt="Down arrow PNG" style={{ height: 60, marginRight: 20 }}>
+                        </img>
+                    </div> }
                 { (!this.state.showMenu)
                     ? <Fragment>
                         <div className="px-4 pb-4 w-100 d-flex flex-row flex-wrap align-items-start align-content-start position-relative" style={{ height: 'calc(95% - 180px)', overflowY: 'scroll' }}>{this.state.chats.map((chat, index) => {
@@ -162,12 +178,11 @@ class Chat extends Component {
                     </Fragment>
                     : <Fragment>
                         <div className="w-100 align-items-center" style={{ display: 'flex', flexDirection: 'column', height: 'auto', color: '#FFF' }}>
-                            <button onClick={() => this.handleChangeChannel('general-chat')} style={{ display: 'block', width: '40%', margin: '5px', padding: '20px', backgroundColor: '#2A275E', color: '#fff', border: 'none', cursor: 'pointer' }}>General Chat</button>
-                            <button onClick={() => this.handleChangeChannel('gamer-chat')} style={{ display: 'block', width: '40%', margin: '5px', padding: '20px', backgroundColor: '#2A275E', color: '#fff', border: 'none', cursor: 'pointer' }}>Gamer Chat</button>
-                            <button onClick={() => this.handleChangeChannel('technology-chat')} style={{ display: 'block', width: '40%', margin: '5px', padding: '20px', backgroundColor: '#2A275E', color: '#fff', border: 'none', cursor: 'pointer' }}>Technology Chat</button>
-                            <button onClick={() => this.handleChangeChannel('rl-chat')} style={{ display: 'block', width: '40%', margin: '5px', padding: '20px', backgroundColor: '#2A275E', color: '#fff', border: 'none', cursor: 'pointer' }}>RL Chat</button>
-                            <button onClick={() => this.handleChangeChannel('introduction-chat')} style={{ display: 'block', width: '40%', margin: '5px', padding: '20px', backgroundColor: '#2A275E', color: '#fff', border: 'none', cursor: 'pointer' }}>Introduction Chat</button>
-                            <button onClick={() => this.handleChangeChannel('anything-chat')} style={{ display: 'block', width: '40%', margin: '5px', padding: '20px', backgroundColor: '#2A275E', color: '#fff', border: 'none', cursor: 'pointer' }}>Anything Chat</button>
+                            <button onClick={() => this.handleChangeChannel('General-Chat')} style={{ display: 'block', width: '40%', margin: '5px', padding: '20px', backgroundColor: '#2A275E', color: '#fff', border: 'none', cursor: 'pointer' }}>General Chat</button>
+                            <button onClick={() => this.handleChangeChannel('Gamer-Chat')} style={{ display: 'block', width: '40%', margin: '5px', padding: '20px', backgroundColor: '#2A275E', color: '#fff', border: 'none', cursor: 'pointer' }}>Gamer Chat</button>
+                            <button onClick={() => this.handleChangeChannel('Technology-Chat')} style={{ display: 'block', width: '40%', margin: '5px', padding: '20px', backgroundColor: '#2A275E', color: '#fff', border: 'none', cursor: 'pointer' }}>Technology Chat</button>
+                            <button onClick={() => this.handleChangeChannel('RL-Chat')} style={{ display: 'block', width: '40%', margin: '5px', padding: '20px', backgroundColor: '#2A275E', color: '#fff', border: 'none', cursor: 'pointer' }}>RL Chat</button>
+                            <button onClick={() => this.handleChangeChannel('Introduction-Chat')} style={{ display: 'block', width: '40%', margin: '5px', padding: '20px', backgroundColor: '#2A275E', color: '#fff', border: 'none', cursor: 'pointer' }}>Introduction Chat</button>
                         </div>
                         <div className="w-100 align-items-center" style={{ display: 'flex', flexDirection: 'column', height: 'auto', color: '#FFF' }}>
                             <Link href={{ pathname: '/about' }}><button style={{ display: 'block', width: '40%', margin: '5px', padding: '20px', backgroundColor: '#2A275E', color: '#fff', border: 'none', cursor: 'pointer' }}>About</button></Link>

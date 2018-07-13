@@ -1,6 +1,6 @@
 {
   "name": "sentimental-chat",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "A real-time chat web app that includes sentiment analysis with Next.js server-side rendering and a Node/Express based back-end.",
   "author": "Christian Nwamba and Brandon Morelli with contributions from Jonathan Leack",
   "license": "ISC",
@@ -10,12 +10,11 @@
     "build": "next build",
     "start": "node server.js"
   },
-  "keywords": [],
+  "keywords": ["pusher", "react", "chat", "node", "sentiment"],
   "dependencies": {
     "axios": "^0.18.0",
     "body-parser": "^1.18.3",
     "cors": "^2.8.4",
-    "dns": "^0.2.2",
     "dotenv": "^6.0.0",
     "express": "^4.16.3",
     "next": "^6.1.1",

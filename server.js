@@ -61,8 +61,6 @@ app.prepare()
         // particular chatroom.
         ========================================================================*/
         server.post('/messages', (req, res, next) => {
-            console.log(res);
-            console.log(chatHistory);
             res.json({ ...chatHistory, status: 'success' });
         });
 
